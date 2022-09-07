@@ -16,13 +16,18 @@ drawboard.setdefaultpos()
 def on_press(key):
     None
 
+def checkWinner():
+    print(f"\033[16;0H")
+    if drawboard.winner == "X":
+        print("\tEnd Game - You Win")
+    elif drawboard.winner == "O":
+        print("\tEnd Game - You Loose")
+    else:
+        print("\tEnd Game - Draw")
+    keyboard.press(Key.esc)
+
 def on_release(key):
     try :
-        if drawboard.checkifWin():
-            print(f"\033[16;0H End Game\t\t")
-            keyboard.press(Key.esc)
-            return False
-
         if key == Key.up:
             drawboard.goUp()
             drawboard.print_debug()
@@ -38,6 +43,9 @@ def on_release(key):
         if key == Key.left:
             drawboard.goLeft()
             drawboard.print_debug()
+
+        # ignore any key press before enter
+        if key == Key.enter:
             return
 
         if key == Key.esc:
@@ -45,19 +53,17 @@ def on_release(key):
             return False
 
         if key.char == 'x':
-            drawboard.mark()
-            if drawboard.checkifWin():
-                print(f"\033[16;0H End Game\t\t")
-                keyboard.press(Key.esc)
-                return False
+            if drawboard.mark():
+                if drawboard.checkifWin():
+                    checkWinner()
+                    return False
 
-        if not drawboard.computer_move():
-            return False
+                if not drawboard.computer_move():
+                    return False
 
-        if drawboard.checkifWin():
-            print(f"\033[16;0H End Game\t\t")
-            keyboard.press(Key.esc)
-            return False
+                if drawboard.checkifWin():
+                    checkWinner()
+                    return False
 
     except Exception as e:
         print(f"\033[16;0H exception = {e}")
@@ -65,3 +71,6 @@ def on_release(key):
 # Collect events until released
 with Listener(on_press=on_press, on_release=on_release) as listener:
     listener.join()
+
+keyboard.press(Key.esc)
+print(f"\033[17;0H ")
