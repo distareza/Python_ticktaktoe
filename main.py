@@ -12,6 +12,7 @@ print("")
 drawboard.print_banner()
 drawboard.drawboard()
 drawboard.setDefaultPos()
+#drawboard.computer_move()
 
 def on_press(key):
     None
@@ -62,6 +63,7 @@ def on_release(key):
                     checkWinner()
                     return False
 
+        return
     except Exception as e:
         #print(f"\033[16;0H exception = {e}")
         None

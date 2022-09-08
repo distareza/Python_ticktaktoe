@@ -1,8 +1,8 @@
 import random
 
-arr = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
+arr = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
 
-initPosX = 10
+initPosX = 12
 initPosY = 5
 
 posX = initPosX
@@ -21,9 +21,9 @@ winner = None
 
 def print_banner():
     print(f"\033[0;0H ")
-    print("\t===============")
-    print("\t  Tic Tac Toe  ")
-    print("\t===============")
+    print("\t ===============")
+    print("\t   Tic Tac Toe  ")
+    print("\t ===============")
     print(f"\033[12;0H Move cursor and mark \"X\" ")
     print(f"\033[13;0H Click Esc to Quit ")
 
@@ -36,19 +36,12 @@ def setDefaultPos():
 
 
 def drawboard():
-    print(f"\033[4;0H  ")
-    for row in [[" "] * 3] * 3:
-        col_num = 1
-        print("\t", end="")
-        for col in row:
-            col_num += 1
-            if col_num <= 3:
-                print("   ", end="|")
-            else:
-                print("   ")
-        print("\t", end="")
-        print(12 * "-")
-
+    print(f"\033[{initPosY+0};{initPosX-1}H {arr[0][0]} | {arr[0][1]} | {arr[0][2]}")
+    print(f"\033[{initPosY+1};{initPosX-2}H { 12 * '-'}")
+    print(f"\033[{initPosY+2};{initPosX-1}H {arr[1][0]} | {arr[1][1]} | {arr[1][2]}")
+    print(f"\033[{initPosY+3};{initPosX-2}H { 12 * '-'}")
+    print(f"\033[{initPosY+4};{initPosX-1}H {arr[2][0]} | {arr[2][1]} | {arr[2][2]}")
+    print(f"\033[{initPosY+5};{initPosX-2}H { 12 * '-'}")
 
 def go(direction):
     global posX, posY
@@ -119,11 +112,11 @@ def goRight():
 def print_debug():
     x = int((posX - initPosX) / stepX)
     y = int((posY - initPosY) / stepY)
-    # print(f"\033[12;0H posX = {posX}, posY = {posY}")
-    # print(f"\033[13;0H initX = {initPosX}, initY = {initPosY}")
-    # print(f"\033[14;0H stepX = {stepX}, stepY = {stepY}")
-    # print(f"\033[15;0H x = {x}, y = {y}, is blank : {bool(arr[x][y].strip())}\t\t")
-    # print(f"\033[16;0H arr = {arr}\t\t")
+    # print(f"\033[4;30H posX = {posX}, posY = {posY}")
+    # print(f"\033[5;30H initX = {initPosX}, initY = {initPosY}")
+    # print(f"\033[6;30H stepX = {stepX}, stepY = {stepY}")
+    # print(f"\033[7;30H x = {x}, y = {y}, is blank : {bool(arr[x][y].strip())}\t\t")
+    # print(f"\033[8;30H arr = {arr}\t\t")
 
 
 def checkifWin():
@@ -168,18 +161,38 @@ def computer_move():
                         and not bool(arr[cell[2]][x].strip()):
                     computer_mark(cell[2], x)
                     return True
-                # check vertically
-                if arr[cell[0]][cell[0]].strip() == mark \
-                        and arr[cell[1]][cell[1]].strip() == mark \
-                        and not bool(arr[cell[2]][cell[2]].strip()):
-                    computer_mark(cell[2], cell[2])
+
+        # check diagonally
+        for mark_sign in [(' ', mark, mark), (mark, ' ', mark), (mark, mark, ' ')]:
+            if arr[0][0].strip() == mark_sign[0].strip() \
+                    and arr[1][1].strip() == mark_sign[1].strip() \
+                    and arr[2][2].strip() == mark_sign[2].strip():
+                for i in range(3):
+                    if not bool(mark_sign[i].strip()):
+                        computer_mark( i, i)
+                        return True
+            if arr[2][0].strip() == mark_sign[0].strip() \
+                    and arr[1][1].strip() == mark_sign[1].strip() \
+                    and arr[0][2].strip() == mark_sign[2].strip():
+                if not bool(mark_sign[0].strip()):
+                    computer_mark(2, 0)
+                    return True
+                if not bool(mark_sign[1].strip()):
+                    computer_mark(1, 1)
+                    return True
+                if not bool(mark_sign[2].strip()):
+                    computer_mark(0, 2)
                     return True
 
-    for row in range(len(arr)):
-        for col in range(len(arr[row])):
+    print(f"\033[17;0HRandom move")
+    arr_row = [0, 1, 2]
+    random.shuffle(arr_row)
+    arr_col = [0, 1, 2]
+    random.shuffle(arr_col)
+    for row in arr_row:
+        for col in arr_col:
             if not bool(arr[row][col].strip()):
                 list_move.append((row, col))
-
     if len(list_move) > 0:
         com_move = random.choice(list_move)
         computer_mark(com_move[0], com_move[1])
