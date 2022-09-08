@@ -23,12 +23,15 @@ def print_banner():
     print("\t===============")
     print("\t  Tic Tac Toe  ")
     print("\t===============")
-    print(f"\033[12;0H Move cursor and mark \"X\" ")
-    print(f"\033[13;0H Click Esc to Quit ")
+    # print(f"\033[12;0H Move cursor and mark \"X\" ")
+    # print(f"\033[13;0H Click Esc to Quit ")
 
 
 def setdefaultpos():
-    move(posX, posY)
+    global posX, posY
+    posX = initPosX
+    posY = initPosY
+    print(f"\033[{posY};{posX}H ")
 
 
 def drawboard():
@@ -46,27 +49,60 @@ def drawboard():
         print(12 * "-")
 
 
-def move(x: int, y: int):
+# def move(x: int, y: int):
+#     x = int((posX - initPosX) / stepX)
+#     y = int((posY - initPosY) / stepY)
+#     try:
+#         if not bool(arr[x][y].strip()):
+#             print(f"\033[{posY};{posX}H_")
+#     except:
+#         None
+#
+#
+# def clear_step():
+#     x = int((posX - initPosX) / stepX)
+#     y = int((posY - initPosY) / stepY)
+#     try:
+#         if not bool(arr[x][y].strip()):
+#             print(f"\033[{posY};{posX}H ")
+#             return True
+#         return False
+#     except:
+#         return False
+
+def go(direction):
+    global posX, posY
+    currPosX = posX
+    currPosY = posY
     x = int((posX - initPosX) / stepX)
     y = int((posY - initPosY) / stepY)
+    currX = x
+    currY = y
+
     try:
-        if not bool(arr[x][y].strip()):
-            print(f"\033[{posY};{posX}H_")
-    except:
-        None
 
+        while x>=0 and x<len(arr) and y>=0 and y<len(arr[0]):
+            if direction == "up":
+                y -= 1
+            elif direction == "down":
+                y += 1
+            elif direction == "right":
+                x += 1
+            elif direction == "left":
+                x -= 1
 
-def clear_step():
-    x = int((posX - initPosX) / stepX)
-    y = int((posY - initPosY) / stepY)
-    try:
-        if not bool(arr[x][y].strip()):
-            print(f"\033[{posY};{posX}H ")
-            return True
-        return False
-    except:
-        return False
-
+            if x>=0 and x<len(arr) and y>=0 and y<len(arr[0]):
+                print_debug()
+                if not bool(arr[x][y].strip()):
+                    if not bool(arr[currX][currY].strip()):
+                        print(f"\033[{currPosY};{currPosX}H ")
+                    posX = initPosX + x * stepX
+                    posY = initPosY + y * stepY
+                    print(f"\033[{posY};{posX}H_")
+                    print_debug()
+                    return
+    except Exception as ex:
+        print(f"\033[17;0H arr = {ex}\t\t")
 
 def mark():
     x = int((posX - initPosX) / stepX)
@@ -79,48 +115,24 @@ def mark():
         return False
 
 def goUp():
-    clear_step()
-    global posY
-    posY -= stepY
-    if posY < minY:
-        posY = minY
-    move(posX, posY)
-
+    go("up")
 
 def goDown():
-    clear_step()
-    global posY
-    posY += stepY
-    if posY > maxY:
-        posY = maxY
-    move(posX, posY)
-
+    go("down")
 
 def goLeft():
-    clear_step()
-    global posX
-    posX -= stepX
-    if posX < minX:
-        posX = minX
-    move(posX, posY)
-
+    go("left")
 
 def goRight():
-    clear_step()
-    global posX
-    posX += stepX
-    if posX > maxX:
-        posX = maxX
-    move(posX, posY)
-
+    go("right")
 
 def print_debug():
     x = int((posX - initPosX) / stepX)
     y = int((posY - initPosY) / stepY)
-    # print(f"\033[12;0H X = {posX}, Y = {posY}")
-    # print(f"\033[13;0H initX = {initPosX}, Y = {initPosY}")
-    # print(f"\033[14;0H stepX = {stepX}, Y = {stepY}")
-    # print(f"\033[15;0H X = {x}, Y = {y}, is blank : {bool(arr[x][y].strip())}\t\t")
+    # print(f"\033[12;0H posX = {posX}, posY = {posY}")
+    # print(f"\033[13;0H initX = {initPosX}, initY = {initPosY}")
+    # print(f"\033[14;0H stepX = {stepX}, stepY = {stepY}")
+    # print(f"\033[15;0H x = {x}, y = {y}, is blank : {bool(arr[x][y].strip())}\t\t")
     # print(f"\033[16;0H arr = {arr}\t\t")
 
 

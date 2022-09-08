@@ -30,19 +30,16 @@ def on_release(key):
     try :
         if key == Key.up:
             drawboard.goUp()
-            drawboard.print_debug()
             return
         if key == Key.down:
             drawboard.goDown()
-            drawboard.print_debug()
             return
         if key == Key.right:
             drawboard.goRight()
-            drawboard.print_debug()
             return
         if key == Key.left:
             drawboard.goLeft()
-            drawboard.print_debug()
+            return
 
         # ignore any key press before enter
         if key == Key.enter:
@@ -66,7 +63,8 @@ def on_release(key):
                     return False
 
     except Exception as e:
-        print(f"\033[16;0H exception = {e}")
+        #print(f"\033[16;0H exception = {e}")
+        None
 
 # Collect events until released
 with Listener(on_press=on_press, on_release=on_release) as listener:
