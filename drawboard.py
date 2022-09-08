@@ -184,7 +184,6 @@ def computer_move():
                     computer_mark(0, 2)
                     return True
 
-    print(f"\033[17;0HRandom move")
     arr_row = [0, 1, 2]
     random.shuffle(arr_row)
     arr_col = [0, 1, 2]
