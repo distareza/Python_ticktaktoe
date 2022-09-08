@@ -18,20 +18,21 @@ maxX = posX + 2 * stepX
 
 winner = None
 
+
 def print_banner():
     print(f"\033[0;0H ")
     print("\t===============")
     print("\t  Tic Tac Toe  ")
     print("\t===============")
-    # print(f"\033[12;0H Move cursor and mark \"X\" ")
-    # print(f"\033[13;0H Click Esc to Quit ")
+    print(f"\033[12;0H Move cursor and mark \"X\" ")
+    print(f"\033[13;0H Click Esc to Quit ")
 
 
-def setdefaultpos():
+def setDefaultPos():
     global posX, posY
     posX = initPosX
     posY = initPosY
-    print(f"\033[{posY};{posX}H ")
+    print(f"\033[{posY};{posX}H_")
 
 
 def drawboard():
@@ -49,27 +50,6 @@ def drawboard():
         print(12 * "-")
 
 
-# def move(x: int, y: int):
-#     x = int((posX - initPosX) / stepX)
-#     y = int((posY - initPosY) / stepY)
-#     try:
-#         if not bool(arr[x][y].strip()):
-#             print(f"\033[{posY};{posX}H_")
-#     except:
-#         None
-#
-#
-# def clear_step():
-#     x = int((posX - initPosX) / stepX)
-#     y = int((posY - initPosY) / stepY)
-#     try:
-#         if not bool(arr[x][y].strip()):
-#             print(f"\033[{posY};{posX}H ")
-#             return True
-#         return False
-#     except:
-#         return False
-
 def go(direction):
     global posX, posY
     currPosX = posX
@@ -81,7 +61,7 @@ def go(direction):
 
     try:
 
-        while x>=0 and x<len(arr) and y>=0 and y<len(arr[0]):
+        while x >= 0 and x < len(arr) and y >= 0 and y < len(arr[0]):
             if direction == "up":
                 y -= 1
             elif direction == "down":
@@ -91,7 +71,7 @@ def go(direction):
             elif direction == "left":
                 x -= 1
 
-            if x>=0 and x<len(arr) and y>=0 and y<len(arr[0]):
+            if x >= 0 and x < len(arr) and y >= 0 and y < len(arr[0]):
                 print_debug()
                 if not bool(arr[x][y].strip()):
                     if not bool(arr[currX][currY].strip()):
@@ -101,8 +81,13 @@ def go(direction):
                     print(f"\033[{posY};{posX}H_")
                     print_debug()
                     return
+
+        # set any where empty slot is available
+        gotoemptyslot()
+
     except Exception as ex:
         print(f"\033[17;0H arr = {ex}\t\t")
+
 
 def mark():
     x = int((posX - initPosX) / stepX)
@@ -114,17 +99,22 @@ def mark():
     else:
         return False
 
+
 def goUp():
     go("up")
+
 
 def goDown():
     go("down")
 
+
 def goLeft():
     go("left")
 
+
 def goRight():
     go("right")
+
 
 def print_debug():
     x = int((posX - initPosX) / stepX)
@@ -204,3 +194,19 @@ def computer_mark(com_x, com_y):
     comPosX = initPosX + com_x * stepX
     comPosY = initPosY + com_y * stepY
     print(f"\033[{comPosY};{comPosX}HO")
+    gotoemptyslot()
+
+# set any where empty slot is available
+def gotoemptyslot():
+    global posX, posY
+    arr_row = [0, 1, 2]
+    random.shuffle(arr_row)
+    arr_col = [0, 1, 2]
+    random.shuffle(arr_col)
+    for x in arr_row:
+        for y in arr_col:
+            if not bool(arr[x][y].strip()):
+                posX = initPosX + x * stepX
+                posY = initPosY + y * stepY
+                print(f"\033[{posY};{posX}H_")
+                return

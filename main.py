@@ -11,7 +11,7 @@ os.system("cls") # for windows
 print("")
 drawboard.print_banner()
 drawboard.drawboard()
-drawboard.setdefaultpos()
+drawboard.setDefaultPos()
 
 def on_press(key):
     None
